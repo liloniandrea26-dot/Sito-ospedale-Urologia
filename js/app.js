@@ -94,6 +94,24 @@ function embedUrl(url) {
   return null;
 }
 
+function ytId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes('youtube.com')) return u.searchParams.get('v') || null;
+    if (u.hostname === 'youtu.be')           return u.pathname.slice(1)     || null;
+  } catch {}
+  return null;
+}
+
+function loadVideo(el, src) {
+  const iframe = document.createElement('iframe');
+  iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+  iframe.allowFullscreen = true;
+  iframe.setAttribute('style', 'width:100%;aspect-ratio:16/9;border:none;display:block');
+  el.replaceWith(iframe);
+}
+
 function readFile(file) {
   return new Promise((ok, err) => { const r = new FileReader(); r.onload = e => ok(e.target.result); r.onerror = err; r.readAsDataURL(file); });
 }
@@ -328,10 +346,25 @@ function renderPosts() {
     return;
   }
   grid.innerHTML = list.map(p => {
-    const ev = p.videoUrl ? embedUrl(p.videoUrl) : null;
+    const ev  = p.videoUrl ? embedUrl(p.videoUrl) : null;
+    const vid = p.videoUrl ? ytId(p.videoUrl) : null;
+    let mediaHtml = '';
+    if (ev) {
+      if (vid) {
+        const thumb = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
+        mediaHtml = `<div class="post-vid">
+          <div class="vid-facade" onclick="loadVideo(this,'${ev}')" role="button" aria-label="Riproduci video: ${esc(p.title)}">
+            <img src="${thumb}" alt="Anteprima video: ${esc(p.title)}" loading="lazy">
+            <div class="vid-play"><div class="vid-play-btn"><i class="fas fa-play"></i></div></div>
+          </div></div>`;
+      } else {
+        mediaHtml = `<div class="post-vid"><iframe src="${ev}" title="${esc(p.title)}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+      }
+    } else if (p.image) {
+      mediaHtml = `<img class="post-img" src="${p.image}" alt="${esc(p.title)}" loading="lazy">`;
+    }
     return `<article class="post-card">
-      ${ev ? `<div class="post-vid"><iframe src="${ev}" title="${esc(p.title)}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>` : ''}
-      ${p.image && !ev ? `<img class="post-img" src="${p.image}" alt="${esc(p.title)}" loading="lazy">` : ''}
+      ${mediaHtml}
       <div class="post-body">
         <div class="post-meta">
           <span class="ptag ${tagClass[p.category] || 'tag-n'}">${esc(p.category)}</span>
@@ -369,12 +402,22 @@ function renderGallery() {
         <img src="${item.src}" alt="${esc(item.caption || 'Foto del reparto di Urologia')}" loading="lazy">
         <div class="gal-overlay" aria-hidden="true"><i class="fas fa-expand"></i></div>
       </div>`;
-    const ev = embedUrl(item.url);
-    return ev ? `
-      <div class="gal-vid">
+    const ev  = embedUrl(item.url);
+    const vid = ytId(item.url);
+    if (!ev) return '';
+    if (vid) {
+      const thumb = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
+      return `<div class="gal-vid">
         ${item.title ? `<div class="gal-vid-title"><i class="fas fa-play-circle" style="margin-right:.4rem"></i>${esc(item.title)}</div>` : ''}
-        <iframe src="${ev}" title="${esc(item.title || 'Video')}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>` : '';
+        <div class="vid-facade" onclick="loadVideo(this,'${ev}')" role="button" aria-label="Riproduci video${item.title ? ': ' + esc(item.title) : ''}">
+          <img src="${thumb}" alt="Anteprima${item.title ? ': ' + esc(item.title) : ''}" loading="lazy">
+          <div class="vid-play"><div class="vid-play-btn"><i class="fas fa-play"></i></div></div>
+        </div></div>`;
+    }
+    return `<div class="gal-vid">
+      ${item.title ? `<div class="gal-vid-title"><i class="fas fa-play-circle" style="margin-right:.4rem"></i>${esc(item.title)}</div>` : ''}
+      <iframe src="${ev}" title="${esc(item.title || 'Video')}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>`;
   }).join('');
 }
 

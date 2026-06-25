@@ -335,6 +335,23 @@ footer strong { color: rgba(255,255,255,.95); }
 #team-edit-box h4 { color: white; margin-bottom: 1rem; font-family: var(--font-title); }
 
 /* =============================================================
+   VIDEO FACADE — thumbnail + play button, iframe on click
+   ============================================================= */
+.vid-facade          { position: relative; cursor: pointer; background: #000; display: block; overflow: hidden; }
+.vid-facade > img    { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; opacity: .88; transition: opacity .25s; }
+.vid-facade:hover > img { opacity: .65; }
+.vid-vimeo           { aspect-ratio: 16/9; background: linear-gradient(135deg, #1ab7ea 0%, #0d7ea8 100%); }
+.vid-play            { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.vid-play-btn        { width: 68px; height: 68px; background: rgba(255,0,0,.92); border-radius: 50%;
+                       display: flex; align-items: center; justify-content: center;
+                       color: white; font-size: 1.5rem; padding-left: .25rem;
+                       transition: transform .2s, background .2s;
+                       box-shadow: 0 4px 24px rgba(0,0,0,.4); }
+.vid-play-btn.vimeo  { background: rgba(26,183,234,.92); padding-left: .25rem; }
+.vid-facade:hover .vid-play-btn        { transform: scale(1.12); background: #cc0000; }
+.vid-facade:hover .vid-play-btn.vimeo  { transform: scale(1.12); background: rgba(13,159,200,.95); }
+
+/* =============================================================
    RESPONSIVE GENERALE
    ============================================================= */
 @media (max-width: 640px) {
