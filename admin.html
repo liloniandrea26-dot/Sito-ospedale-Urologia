@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Gestione — Urologia Ospedale Pederzoli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    /* =========================================================
+       VARIABILI
+       ========================================================= */
+    :root {
+      --blue:    #0B3D6B;
+      --accent:  #2E86AB;
+      --light:   #E8F4FD;
+      --white:   #FFFFFF;
+      --bg:      #F1F5F9;
+      --text:    #1E293B;
+      --muted:   #64748B;
+      --border:  #E2E8F0;
+      --danger:  #DC2626;
+      --success: #16A34A;
+      --sb-w:    260px;
+      --top-h:   64px;
+      --radius:  8px;
+      --shadow:  0 1px 8px rgba(11,61,107,.10);
+      --fn:      'Inter', sans-serif;
+      --ft:      'Playfair Display', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: var(--fn); color: var(--text); background: var(--bg); }
+    img  { max-width: 100%; display: block; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* =========================================================
+       LOGIN
+       ========================================================= */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--blue) 0%, #0e5287 60%, #1a6fa8 100%);
+      padding: 1.5rem;
+    }
+    .login-card {
+      background: var(--white); border-radius: 16px; padding: 2.5rem 2rem;
+      width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(11,61,107,.3);
+    }
+    .login-brand { text-align: center; margin-bottom: 2rem; }
+    .login-brand .ico { width: 56px; height: 56px; background: var(--light); border-radius: 50%;
+                        display: flex; align-items: center; justify-content: center; margin: 0 auto .75rem;
+                        color: var(--blue); font-size: 1.4rem; }
+    .login-brand h1 { font-family: var(--ft); font-size: 1.4rem; color: var(--blue); }
+    .login-brand p  { font-size: .8rem; color: var(--muted); margin-top: .25rem; }
+    .form-group     { margin-bottom: 1.1rem; }
+    .form-group label { display: block; font-size: .8rem; font-weight: 600; color: var(--muted);
+                        letter-spacing: .04em; text-transform: uppercase; margin-bottom: .4rem; }
+    .form-control   { width: 100%; padding: .7rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius);
+                      font-family: var(--fn); font-size: .95rem; color: var(--text); background: var(--white);
+                      transition: border-color .2s; outline: none; }
+    .form-control:focus { border-color: var(--accent); }
+    .pw-wrap { position: relative; }
+    .pw-wrap .form-control { padding-right: 2.75rem; }
+    .pw-toggle { position: absolute; right: .75rem; top: 50%; transform: translateY(-50%);
+                 background: none; border: none; color: var(--muted); cursor: pointer; font-size: .9rem; }
+    .login-btn { width: 100%; padding: .8rem; background: var(--accent); color: var(--white); border: none;
+                 border-radius: var(--radius); font-family: var(--fn); font-size: 1rem; font-weight: 600;
+                 cursor: pointer; transition: background .2s; margin-top: .5rem; }
+    .login-btn:hover { background: var(--blue); }
+    .login-err { background: #FEE2E2; color: var(--danger); border-radius: var(--radius); padding: .6rem .9rem;
+                 font-size: .85rem; margin-top: .75rem; display: none; }
+    .login-err.show { display: block; }
+    .login-link { text-align: center; margin-top: 1.25rem; }
+    .login-link a { font-size: .82rem; color: var(--accent); }
+
+    /* =========================================================
+       LAYOUT ADMIN
+       ========================================================= */
+    #app { display: none; height: 100vh; }
+    #app.visible { display: flex; }
+
+    /* Sidebar */
+    #sidebar {
+      width: var(--sb-w); background: var(--blue); display: flex; flex-direction: column;
+      flex-shrink: 0; overflow-y: auto; transition: transform .3s;
+    }
+    .sb-brand { padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .sb-brand .name  { font-family: var(--ft); font-size: 1.1rem; color: var(--white); }
+    .sb-brand .hosp  { font-size: .68rem; color: rgba(255,255,255,.5); letter-spacing: .08em; text-transform: uppercase; margin-top: .15rem; }
+    .sb-label { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+                color: rgba(255,255,255,.35); padding: 1.25rem 1.25rem .5rem; }
+    .sb-nav   { flex: 1; padding: .5rem 0; }
+    .sb-item  { display: flex; align-items: center; gap: .75rem; padding: .7rem 1.25rem;
+                color: rgba(255,255,255,.7); font-size: .875rem; font-weight: 500;
+                cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+                transition: background .15s, color .15s; border-radius: 0; }
+    .sb-item i { width: 18px; text-align: center; font-size: .9rem; }
+    .sb-item:hover  { background: rgba(255,255,255,.08); color: var(--white); }
+    .sb-item.active { background: rgba(255,255,255,.15); color: var(--white); font-weight: 600; }
+    .sb-item.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+                               width: 3px; height: 60%; background: var(--accent); border-radius: 0 3px 3px 0; }
+    .sb-item { position: relative; }
+    .sb-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,.1); }
+    .sb-user   { display: flex; align-items: center; gap: .75rem; }
+    .sb-avatar { width: 36px; height: 36px; background: rgba(255,255,255,.15); border-radius: 50%;
+                 display: flex; align-items: center; justify-content: center; color: white; font-size: .9rem; flex-shrink: 0; }
+    .sb-user-info .uname { color: white; font-size: .85rem; font-weight: 600; }
+    .sb-user-info .urole { color: rgba(255,255,255,.5); font-size: .72rem; }
+    .sb-logout { background: none; border: none; color: rgba(255,255,255,.5); cursor: pointer;
+                 font-size: .8rem; margin-left: auto; transition: color .2s; }
+    .sb-logout:hover { color: white; }
+
+    /* Main area */
+    #main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Top bar */
+    #top-bar { height: var(--top-h); background: var(--white); border-bottom: 1px solid var(--border);
+               padding: 0 1.75rem; display: flex; align-items: center; justify-content: space-between;
+               flex-shrink: 0; gap: 1rem; }
+    .tb-left  { display: flex; align-items: center; gap: .75rem; }
+    #sb-toggle { display: none; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; }
+    #page-title { font-family: var(--ft); font-size: 1.25rem; color: var(--blue); }
+    .tb-right { display: flex; align-items: center; gap: .75rem; }
+    .tb-link  { display: inline-flex; align-items: center; gap: .4rem; font-size: .82rem; color: var(--accent);
+                font-weight: 500; text-decoration: none; background: var(--light); padding: .35rem .85rem;
+                border-radius: 20px; transition: background .2s; }
+    .tb-link:hover { background: #d0e9f8; }
+
+    /* Content */
+    #content { flex: 1; overflow-y: auto; padding: 1.75rem; }
+
+    /* Page sections */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* =========================================================
+       COMPONENTI COMUNI
+       ========================================================= */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.75rem; }
+    .stat-card { background: var(--white); border-radius: var(--radius); padding: 1.25rem 1.5rem;
+                 box-shadow: var(--shadow); display: flex; align-items: center; gap: 1rem; }
+    .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center;
+                 justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .stat-icon.blue   { background: var(--light); color: var(--blue); }
+    .stat-icon.accent { background: #dff0f8; color: var(--accent); }
+    .stat-icon.green  { background: #dcfce7; color: var(--success); }
+    .stat-val  { font-size: 1.75rem; font-weight: 700; color: var(--blue); line-height: 1; }
+    .stat-lbl  { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
+
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem; }
+    .section-head h2 { font-family: var(--ft); font-size: 1.15rem; color: var(--blue); }
+
+    .card  { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card-body  { padding: 1.5rem; }
+    .card-title { font-family: var(--ft); font-size: 1rem; color: var(--blue); margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid var(--border); }
+
+    /* Buttons */
+    .btn      { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.2rem; border-radius: 6px;
+                font-family: var(--fn); font-size: .85rem; font-weight: 600; cursor: pointer;
+                border: none; transition: all .2s; text-decoration: none; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--blue); }
+    .btn-danger  { background: var(--danger); color: white; }
+    .btn-danger:hover  { background: #b91c1c; }
+    .btn-ghost   { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+    .btn-ghost:hover   { border-color: var(--accent); color: var(--accent); }
+    .btn-sm { padding: .35rem .8rem; font-size: .78rem; }
+
+    /* Form elements */
+    .fl { display: block; font-size: .78rem; font-weight: 600; color: var(--muted); letter-spacing: .04em;
+          text-transform: uppercase; margin-bottom: .35rem; }
+    .fi, .fta, .fsel { width: 100%; padding: .6rem .9rem; border: 1.5px solid var(--border); border-radius: var(--radius);
+                       font-family: var(--fn); font-size: .9rem; color: var(--text); background: var(--white);
+                       margin-bottom: .9rem; outline: none; transition: border-color .2s; }
+    .fi:focus, .fta:focus, .fsel:focus { border-color: var(--accent); }
+    .fta  { min-height: 90px; resize: vertical; }
+    .fg2  { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .fg2 { grid-template-columns: 1fr; } }
+    .fgrp { margin-bottom: .1rem; }
+
+    /* Items list */
+    .item-list  { display: flex; flex-direction: column; gap: .6rem; }
+    .item-row   { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+                  padding: .9rem 1rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .item-row:hover { border-color: var(--accent); }
+    .item-info  { flex: 1; min-width: 0; }
+    .item-title { font-weight: 600; font-size: .9rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-meta  { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+    .item-actions { display: flex; gap: .4rem; flex-shrink: 0; }
+
+    /* Tags */
+    .tag  { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: .2rem .55rem; border-radius: 4px; }
+    .tag-n { background: #dbeafe; color: #1d4ed8; }
+    .tag-i { background: #d1fae5; color: #065f46; }
+    .tag-e { background: #fef3c7; color: #92400e; }
+    .tag-a { background: #f3e8ff; color: #6b21a8; }
+
+    /* Team grid */
+    .team-adm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+    .team-adm-card { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius);
+                     padding: 1rem; text-align: center; transition: border-color .2s; cursor: pointer; }
+    .team-adm-card:hover { border-color: var(--accent); }
+    .team-adm-photo { width: 60px; height: 60px; border-radius: 50%; background: var(--light);
+                      margin: 0 auto .6rem; overflow: hidden; display: flex; align-items: center;
+                      justify-content: center; color: var(--accent); font-size: 1.4rem; }
+    .team-adm-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .team-adm-name { font-size: .8rem; font-weight: 600; color: var(--blue); line-height: 1.3; }
+    .team-adm-role { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+
+    /* Gallery grid */
+    .gal-adm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .75rem; margin-top: 1rem; }
+    .gal-adm-item { border-radius: var(--radius); overflow: hidden; position: relative; background: var(--border); aspect-ratio: 4/3; }
+    .gal-adm-item img { width: 100%; height: 100%; object-fit: cover; }
+    .gal-adm-del  { position: absolute; top: .3rem; right: .3rem; background: rgba(220,38,38,.85); color: white;
+                    border: none; border-radius: 4px; padding: .2rem .45rem; cursor: pointer; font-size: .7rem; }
+    .gal-adm-vid  { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+                    padding: .75rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .5rem; }
+    .gal-adm-vid-info .vt { font-size: .85rem; font-weight: 600; color: var(--text); }
+    .gal-adm-vid-info .vu { font-size: .75rem; color: var(--muted); }
+
+    /* Modal */
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 1000;
+                align-items: center; justify-content: center; padding: 1rem; }
+    .modal-bg.open { display: flex; }
+    .modal  { background: var(--white); border-radius: 12px; width: 100%; max-width: 540px;
+              box-shadow: 0 20px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
+    .modal-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+                  display: flex; align-items: center; justify-content: space-between; }
+    .modal-head h3 { font-family: var(--ft); font-size: 1.1rem; color: var(--blue); }
+    .modal-close   { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; }
+    .modal-body    { padding: 1.5rem; }
+    .modal-foot    { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: .5rem; justify-content: flex-end; }
+
+    /* Toast */
+    #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: .75rem 1.25rem; border-radius: 8px;
+             font-size: .875rem; font-weight: 600; z-index: 5000; opacity: 0; transform: translateY(8px);
+             transition: opacity .3s, transform .3s; pointer-events: none; }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.ok   { background: var(--success); color: white; }
+    #toast.err  { background: var(--danger);  color: white; }
+
+    /* Divider */
+    .sep { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+    /* Empty state */
+    .empty { text-align: center; color: var(--muted); padding: 3rem 1rem; }
+    .empty i { font-size: 2rem; opacity: .35; display: block; margin-bottom: .75rem; }
+
+    /* Overlay mobile sidebar */
+    .sb-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 900; }
+    .sb-overlay.show { display: block; }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+    @media (max-width: 900px) {
+      #sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 950; transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #sb-toggle { display: block; }
+      #content { padding: 1.25rem; }
+    }
+    @media (max-width: 500px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .team-adm-grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOGIN
+     ============================================================ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="ico"><i class="fas fa-hospital" aria-hidden="true"></i></div>
+      <h1>Gestione Sito</h1>
+      <p>Urologia — Ospedale Pederzoli</p>
+    </div>
+    <div class="form-group">
+      <label for="l-user">Username</label>
+      <input type="text" id="l-user" class="form-control" placeholder="Username" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label for="l-pass">Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="l-pass" class="form-control" placeholder="Password" autocomplete="current-password">
+        <button class="pw-toggle" id="pw-toggle" type="button" aria-label="Mostra/nascondi password">
+          <i class="fas fa-eye" id="pw-icon"></i>
+        </button>
+      </div>
+    </div>
+    <button class="login-btn" id="login-btn" type="button">Accedi</button>
+    <div class="login-err" id="login-err">Credenziali non corrette. Riprova.</div>
+    <div class="login-link"><a href="index.html">← Torna al sito pubblico</a></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     APP DASHBOARD
+     ============================================================ -->
+<div id="app">
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sb-overlay" id="sb-overlay"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" aria-label="Navigazione admin">
+    <div class="sb-brand">
+      <div class="name">Pannello Admin</div>
+      <div class="hosp">Urologia · Pederzoli</div>
+    </div>
+    <div class="sb-label">Gestione contenuti</div>
+    <nav class="sb-nav" role="navigation">
+      <button class="sb-item active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</button>
+      <button class="sb-item" data-page="notizie"><i class="fas fa-newspaper"></i> Notizie &amp; Post</button>
+      <button class="sb-item" data-page="galleria"><i class="fas fa-images"></i> Galleria</button>
+      <button class="sb-item" data-page="team"><i class="fas fa-user-md"></i> Team medico</button>
+      <button class="sb-item" data-page="impostazioni"><i class="fas fa-cog"></i> Impostazioni</button>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar"><i class="fas fa-user"></i></div>
+        <div class="sb-user-info">
+          <div class="uname">Amministratore</div>
+          <div class="urole">Accesso completo</div>
+        </div>
+        <button class="sb-logout" id="logout-btn" title="Esci" aria-label="Esci"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div id="main-area">
+    <header id="top-bar">
+      <div class="tb-left">
+        <button id="sb-toggle" aria-label="Apri menu"><i class="fas fa-bars"></i></button>
+        <h1 id="page-title">Dashboard</h1>
+      </div>
+      <div class="tb-right">
+        <a href="index.html" target="_blank" class="tb-link"><i class="fas fa-external-link-alt"></i> Vedi sito</a>
+      </div>
+    </header>
+
+    <main id="content">
+
+      <!-- PAGE: Dashboard -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-row" id="stats-row"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem" class="dash-grid">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Ultimi post pubblicati</div>
+              <div id="dash-recent-posts"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Azioni rapide</div>
+              <div style="display:flex;flex-direction:column;gap:.6rem">
+                <button class="btn btn-primary" onclick="goTo('notizie');openNewPostForm()"><i class="fas fa-plus"></i> Nuovo post</button>
+                <button class="btn btn-ghost"   onclick="goTo('galleria')"><i class="fas fa-upload"></i> Carica foto/video</button>
+                <button class="btn btn-ghost"   onclick="goTo('team')"><i class="fas fa-user-edit"></i> Modifica team</button>
+                <button class="btn btn-ghost"   onclick="goTo('impostazioni')"><i class="fas fa-cog"></i> Impostazioni sito</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: Notizie -->
+      <div class="page" id="page-notizie">
+        <div class="section-head">
+          <h2>Notizie &amp; Post</h2>
+          <button class="btn btn-primary" id="new-post-btn"><i class="fas fa-plus"></i> Nuovo post</button>
+        </div>
+        <!-- Form nuovo/edit post -->
+        <div class="card" id="post-form-card" style="display:none;margin-bottom:1.25rem">
+          <div class="card-body">
+            <div class="card-title" id="post-form-title">Nuovo post</div>
+            <input type="hidden" id="post-edit-id">
+            <div class="fg2">
+              <div class="fgrp"><label class="fl" for="pf-title">Titolo *</label><input type="text" class="fi" id="pf-title" placeholder="Titolo del post"></div>
+              <div class="fgrp"><label class="fl" for="pf-cat">Categoria *</label>
+                <select class="fsel" id="pf-cat">
+                  <option value="Notizia">Notizia</option>
+                  <option value="Intervista">Intervista</option>
+                  <option value="Evento">Evento</option>
+                  <option value="Articolo scientifico">Articolo scientifico</option>
+                </select>
+              </div>
+            </div>
+            <div class="fgrp"><label class="fl" for="pf-text">Testo</label><textarea class="fta" id="pf-text" placeholder="Testo del post..."></textarea></div>
+            <div class="fg2">
+              <div class="fgrp"><label class="fl" for="pf-video">URL Video (YouTube / Vimeo)</label><input type="url" class="fi" id="pf-video" placeholder="https://www.youtube.com/watch?v=..."></div>
+              <div class="fgrp"><label class="fl" for="pf-img">Immagine</label><input type="file" class="fi" id="pf-img" accept="image/*" style="padding:.35rem"></div>
+            </div>
+            <div id="pf-img-preview" style="margin-bottom:.9rem;display:none"><img id="pf-img-preview-src" style="max-height:120px;border-radius:6px;object-fit:cover" alt="Anteprima"></div>
+            <div style="display:flex;gap:.5rem">
+              <button class="btn btn-primary" id="post-save-btn" type="button"><i class="fas fa-save"></i> Salva</button>
+              <button class="btn btn-ghost"   id="post-cancel-btn" type="button">Annulla</button>
+            </div>
+          </div>
+        </div>
+        <!-- Lista post -->
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">Post esistenti (<span id="posts-count">0</span>)</div>
+            <div class="item-list" id="posts-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: Galleria -->
+      <div class="page" id="page-galleria">
+        <div class="section-head"><h2>Galleria foto &amp; video</h2></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem" class="gal-upload-row">
+          <!-- Carica foto -->
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Carica foto</div>
+              <div class="fgrp"><label class="fl" for="gf-img">Seleziona immagini</label><input type="file" class="fi" id="gf-img" accept="image/*" multiple style="padding:.35rem"></div>
+              <div class="fgrp"><label class="fl" for="gf-cap">Didascalia</label><input type="text" class="fi" id="gf-cap" placeholder="Descrizione..."></div>
+              <button class="btn btn-primary" id="gf-upload-btn"><i class="fas fa-upload"></i> Carica</button>
+            </div>
+          </div>
+          <!-- Aggiungi video -->
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Aggiungi video</div>
+              <div class="fgrp"><label class="fl" for="gv-url">URL YouTube o Vimeo</label><input type="url" class="fi" id="gv-url" placeholder="https://www.youtube.com/watch?v=..."></div>
+              <div class="fgrp"><label class="fl" for="gv-title">Titolo video</label><input type="text" class="fi" id="gv-title" placeholder="Titolo..."></div>
+              <button class="btn btn-primary" id="gv-add-btn"><i class="fas fa-video"></i> Aggiungi</button>
+            </div>
+          </div>
+        </div>
+        <!-- Foto grid -->
+        <div class="card" style="margin-bottom:1.25rem">
+          <div class="card-body">
+            <div class="card-title">Foto (<span id="photos-count">0</span>)</div>
+            <div class="gal-adm-grid" id="gal-photos-grid"></div>
+            <div class="empty" id="gal-photos-empty" style="display:none"><i class="fas fa-image"></i>Nessuna foto caricata.</div>
+          </div>
+        </div>
+        <!-- Video list -->
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">Video (<span id="videos-count">0</span>)</div>
+            <div id="gal-videos-list"></div>
+            <div class="empty" id="gal-videos-empty" style="display:none"><i class="fas fa-film"></i>Nessun video aggiunto.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: Team -->
+      <div class="page" id="page-team">
+        <div class="section-head"><h2>Team medico</h2><span style="font-size:.85rem;color:var(--muted)">Clicca un membro per modificarlo</span></div>
+        <div class="team-adm-grid" id="team-adm-grid"></div>
+      </div>
+
+      <!-- PAGE: Impostazioni -->
+      <div class="page" id="page-impostazioni">
+        <div class="section-head"><h2>Impostazioni sito</h2></div>
+        <div class="card" style="margin-bottom:1.25rem">
+          <div class="card-body">
+            <div class="card-title">Testo "Chi siamo"</div>
+            <div class="fgrp"><label class="fl" for="s-about">Testo descrittivo (righe vuote = paragrafo)</label><textarea class="fta" id="s-about" style="min-height:130px"></textarea></div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:1.25rem">
+          <div class="card-body">
+            <div class="card-title">Informazioni di contatto</div>
+            <div class="fg2">
+              <div class="fgrp"><label class="fl" for="s-addr">Indirizzo</label><input type="text"  class="fi" id="s-addr"></div>
+              <div class="fgrp"><label class="fl" for="s-phone">Telefono</label><input type="text"  class="fi" id="s-phone"></div>
+              <div class="fgrp"><label class="fl" for="s-email">Email</label>   <input type="email" class="fi" id="s-email"></div>
+              <div class="fgrp"><label class="fl" for="s-hours">Orari</label>   <input type="text"  class="fi" id="s-hours"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:1.25rem">
+          <div class="card-body">
+            <div class="card-title">Link prenotazioni</div>
+            <div class="fg2">
+              <div class="fgrp"><label class="fl" for="s-prenoting">URL Prenoting™</label><input type="url" class="fi" id="s-prenoting"></div>
+              <div class="fgrp"><label class="fl" for="s-myped">URL My Pederzoli</label>  <input type="url" class="fi" id="s-myped"></div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="settings-save-btn"><i class="fas fa-save"></i> Salva impostazioni</button>
+        <hr class="sep">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title" style="color:var(--danger)">Zona pericolosa</div>
+            <p style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">Reimposta tutti i contenuti ai valori predefiniti. L'operazione è irreversibile.</p>
+            <button class="btn btn-danger" id="reset-btn"><i class="fas fa-trash-alt"></i> Reimposta tutti i dati</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /main-area -->
+</div><!-- /app -->
+
+<!-- Modal edit team member -->
+<div class="modal-bg" id="team-modal" role="dialog" aria-modal="true" aria-label="Modifica membro del team">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="team-modal-title">Modifica membro</h3>
+      <button class="modal-close" id="team-modal-close" aria-label="Chiudi"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="tm-idx">
+      <div class="fgrp"><label class="fl" for="tm-role">Ruolo</label><input type="text" class="fi" id="tm-role" placeholder="es. Urologo, Dirigente Medico"></div>
+      <div class="fgrp"><label class="fl" for="tm-photo">Foto</label><input type="file" class="fi" id="tm-photo" accept="image/*" style="padding:.35rem"></div>
+      <div id="tm-preview" style="display:none;margin-bottom:.5rem"><img id="tm-preview-img" style="width:80px;height:80px;border-radius:50%;object-fit:cover" alt="Anteprima foto"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="team-modal-cancel">Annulla</button>
+      <button class="btn btn-primary" id="team-modal-save"><i class="fas fa-save"></i> Salva</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+/* ================================================================
+   CREDENZIALI — modifica qui
+   ================================================================ */
+const ADMIN_USERNAME = 'admin';           // cambia username
+const ADMIN_PASSWORD = 'pederzoli2025';   // cambia password
+
+/* ================================================================
+   DATI DEFAULT
+   ================================================================ */
+const DEFAULT_TEAM = [
+  { name: 'Dott. Luca Aresu',           role: 'Urologo',                 photo: '' },
+  { name: 'Dott. Rossella Bertoloni',    role: 'Urologa',                 photo: '' },
+  { name: 'Dott. Gaetano Grosso',        role: 'Direttore U.O. Urologia', photo: '' },
+  { name: 'Dott.ssa Sara Grosso',        role: 'Urologa',                 photo: '' },
+  { name: 'Dott. Armando Marciano',      role: 'Urologo',                 photo: '' },
+  { name: 'Dott. Matteo Marini',         role: 'Urologo',                 photo: '' },
+  { name: 'Dott. Francesco Maritati',    role: 'Urologo',                 photo: '' },
+  { name: 'Dott. Arjan Nazaraj',         role: 'Urologo',                 photo: '' },
+  { name: 'Dott. Massimo Occhipinti',    role: 'Urologo',                 photo: '' },
+  { name: 'Dott.ssa Angela Pecoraro',    role: 'Urologa',                 photo: '' },
+  { name: 'Dott. Andrea Polara',         role: 'Urologo',                 photo: '' },
+  { name: 'Dott. Sebastiano Rapisarda',  role: 'Urologo',                 photo: '' },
+  { name: 'Dott.ssa Federica Trovato',   role: 'Urologa',                 photo: '' }
+];
+const DEFAULT_SETTINGS = {
+  about:       "Il reparto di Urologia dell'Ospedale Pederzoli è un centro di riferimento nazionale per la chirurgia urologica robotica e mininvasiva. Con un team di professionisti altamente specializzati e tecnologie d'avanguardia, offriamo cure di eccellenza per patologie urologiche benigne e oncologiche.\n\nLa nostra filosofia unisce rigore scientifico e umanità: ogni paziente è accolto con attenzione e rispetto, in un ambiente pensato per il benessere fisico e psicologico.",
+  address:     'Via Monte Baldo, 24 — 37019 Peschiera del Garda (VR)',
+  phone:       '+39 045 6449111',
+  email:       'urologia@pederzoli.it',
+  hours:       'Lunedì – Venerdì: 8:00 – 16:00',
+  prenoting:   'https://www.prenoting.it',
+  mypederzoli: 'https://my.pederzoli.it'
+};
+
+/* ================================================================
+   STORAGE
+   ================================================================ */
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { toast('Errore: spazio insufficiente.', 'err'); } }
+};
+
+/* ================================================================
+   STATE
+   ================================================================ */
+let posts, gallery, team, settings;
+function loadState() {
+  posts    = LS.get('uro_posts',    []);
+  gallery  = LS.get('uro_gallery',  []);
+  team     = LS.get('uro_team',     null); if (!team)     { team     = JSON.parse(JSON.stringify(DEFAULT_TEAM));    LS.set('uro_team',     team);     }
+  settings = LS.get('uro_settings', null); if (!settings) { settings = Object.assign({}, DEFAULT_SETTINGS);        LS.set('uro_settings', settings); }
+}
+
+/* ================================================================
+   UTILS
+   ================================================================ */
+const uid  = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const esc  = s => s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
+const fmtD = iso => new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: 'long', year: 'numeric' });
+
+function embedUrl(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes('youtube.com')) { const id=u.searchParams.get('v'); if(id) return `https://www.youtube.com/embed/${id}`; }
+    if (u.hostname==='youtu.be')             { const id=u.pathname.slice(1);     if(id) return `https://www.youtube.com/embed/${id}`; }
+    if (u.hostname.includes('vimeo.com'))    { const id=u.pathname.split('/').filter(Boolean).pop(); if(id) return `https://player.vimeo.com/video/${id}`; }
+  } catch {}
+  return null;
+}
+
+function readFile(file) {
+  return new Promise((ok, err) => { const r=new FileReader(); r.onload=e=>ok(e.target.result); r.onerror=err; r.readAsDataURL(file); });
+}
+
+function toast(msg, type='ok') {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='show '+type;
+  setTimeout(()=>el.className='', 3000);
+}
+
+/* ================================================================
+   AUTH
+   ================================================================ */
+let isLoggedIn = false;
+
+document.getElementById('login-btn').addEventListener('click', doLogin);
+document.getElementById('l-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('l-user').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('l-pass').focus(); });
+
+document.getElementById('pw-toggle').addEventListener('click', function() {
+  const inp = document.getElementById('l-pass');
+  const ico = document.getElementById('pw-icon');
+  if (inp.type==='password') { inp.type='text'; ico.className='fas fa-eye-slash'; }
+  else                       { inp.type='password'; ico.className='fas fa-eye'; }
+});
+
+function doLogin() {
+  const u=document.getElementById('l-user').value.trim();
+  const p=document.getElementById('l-pass').value;
+  const e=document.getElementById('login-err');
+  if (u===ADMIN_USERNAME && p===ADMIN_PASSWORD) {
+    isLoggedIn=true; e.classList.remove('show');
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').classList.add('visible');
+    loadState(); renderAll();
+  } else {
+    e.classList.add('show');
+  }
+}
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  isLoggedIn=false;
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('l-pass').value='';
+  document.getElementById('l-user').value='';
+});
+
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+const PAGE_TITLES = { dashboard:'Dashboard', notizie:'Notizie & Post', galleria:'Galleria', team:'Team medico', impostazioni:'Impostazioni' };
+
+document.querySelectorAll('.sb-item').forEach(btn => {
+  btn.addEventListener('click', function() { goTo(this.dataset.page); closeSidebar(); });
+});
+
+function goTo(name) {
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.toggle('active', b.dataset.page===name));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id==='page-'+name));
+  document.getElementById('page-title').textContent = PAGE_TITLES[name] || name;
+}
+
+/* ================================================================
+   SIDEBAR MOBILE
+   ================================================================ */
+document.getElementById('sb-toggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sb-overlay').classList.add('show');
+});
+document.getElementById('sb-overlay').addEventListener('click', closeSidebar);
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('show');
+}
+
+/* ================================================================
+   RENDER ALL
+   ================================================================ */
+function renderAll() {
+  renderDashboard();
+  renderPostsList();
+  renderGalleryGrids();
+  renderTeamGrid();
+  loadSettingsForm();
+}
+
+/* ================================================================
+   DASHBOARD
+   ================================================================ */
+function renderDashboard() {
+  const photos = gallery.filter(g=>g.type==='photo').length;
+  const videos = gallery.filter(g=>g.type==='video').length;
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-newspaper"></i></div><div><div class="stat-val">${posts.length}</div><div class="stat-lbl">Post pubblicati</div></div></div>
+    <div class="stat-card"><div class="stat-icon accent"><i class="fas fa-image"></i></div><div><div class="stat-val">${photos}</div><div class="stat-lbl">Foto in galleria</div></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-video"></i></div><div><div class="stat-val">${videos}</div><div class="stat-lbl">Video in galleria</div></div></div>`;
+
+  const recent = [...posts].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,3);
+  const el = document.getElementById('dash-recent-posts');
+  if (!recent.length) { el.innerHTML='<div class="empty"><i class="fas fa-newspaper"></i>Nessun post ancora.</div>'; return; }
+  const tagClass = { 'Notizia':'tag-n','Intervista':'tag-i','Evento':'tag-e','Articolo scientifico':'tag-a' };
+  el.innerHTML = '<div class="item-list">' + recent.map(p=>`
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-title">${esc(p.title)}</div>
+        <div class="item-meta"><span class="tag ${tagClass[p.category]||'tag-n'}">${esc(p.category)}</span> · ${fmtD(p.date)}</div>
+      </div>
+    </div>`).join('') + '</div>';
+}
+
+/* ================================================================
+   POSTS
+   ================================================================ */
+const tagClass = { 'Notizia':'tag-n','Intervista':'tag-i','Evento':'tag-e','Articolo scientifico':'tag-a' };
+
+document.getElementById('new-post-btn').addEventListener('click', openNewPostForm);
+document.getElementById('post-cancel-btn').addEventListener('click', closePostForm);
+document.getElementById('post-save-btn').addEventListener('click', savePost);
+
+document.getElementById('pf-img').addEventListener('change', async function() {
+  const f=this.files[0]; if (!f) return;
+  try {
+    const src=await readFile(f);
+    document.getElementById('pf-img-preview-src').src=src;
+    document.getElementById('pf-img-preview').style.display='block';
+  } catch {}
+});
+
+function openNewPostForm() {
+  document.getElementById('post-edit-id').value='';
+  document.getElementById('pf-title').value='';
+  document.getElementById('pf-cat').value='Notizia';
+  document.getElementById('pf-text').value='';
+  document.getElementById('pf-video').value='';
+  document.getElementById('pf-img').value='';
+  document.getElementById('pf-img-preview').style.display='none';
+  document.getElementById('post-form-title').textContent='Nuovo post';
+  document.getElementById('post-form-card').style.display='block';
+  document.getElementById('post-form-card').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function closePostForm() {
+  document.getElementById('post-form-card').style.display='none';
+}
+
+async function savePost() {
+  const title=document.getElementById('pf-title').value.trim();
+  if (!title) { toast('Inserisci il titolo!','err'); return; }
+  const id    = document.getElementById('post-edit-id').value;
+  const cat   = document.getElementById('pf-cat').value;
+  const text  = document.getElementById('pf-text').value.trim();
+  const video = document.getElementById('pf-video').value.trim();
+  const file  = document.getElementById('pf-img').files[0];
+
+  if (id) {
+    // edit existing
+    const p=posts.find(x=>x.id===id);
+    if (!p) return;
+    p.title=title; p.category=cat; p.text=text; p.videoUrl=video;
+    if (file) { try { p.image=await readFile(file); } catch { toast('Errore immagine','err'); return; } }
+  } else {
+    let image='';
+    if (file) { try { image=await readFile(file); } catch { toast('Errore immagine','err'); return; } }
+    posts.unshift({ id:uid(), title, category:cat, text, videoUrl:video, image, date:new Date().toISOString() });
+  }
+
+  LS.set('uro_posts',posts);
+  renderPostsList(); renderDashboard(); closePostForm();
+  toast(id ? 'Post aggiornato!' : 'Post pubblicato!');
+}
+
+function editPost(postId) {
+  const p=posts.find(x=>x.id===postId); if(!p) return;
+  document.getElementById('post-edit-id').value=p.id;
+  document.getElementById('pf-title').value=p.title;
+  document.getElementById('pf-cat').value=p.category;
+  document.getElementById('pf-text').value=p.text||'';
+  document.getElementById('pf-video').value=p.videoUrl||'';
+  document.getElementById('pf-img').value='';
+  if (p.image) {
+    document.getElementById('pf-img-preview-src').src=p.image;
+    document.getElementById('pf-img-preview').style.display='block';
+  } else { document.getElementById('pf-img-preview').style.display='none'; }
+  document.getElementById('post-form-title').textContent='Modifica post';
+  document.getElementById('post-form-card').style.display='block';
+  document.getElementById('post-form-card').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function deletePost(postId) {
+  if (!confirm('Eliminare questo post?')) return;
+  posts=posts.filter(p=>p.id!==postId); LS.set('uro_posts',posts);
+  renderPostsList(); renderDashboard(); toast('Post eliminato.');
+}
+
+function renderPostsList() {
+  const el=document.getElementById('posts-list');
+  document.getElementById('posts-count').textContent=posts.length;
+  if (!posts.length) { el.innerHTML='<div class="empty"><i class="fas fa-newspaper"></i>Nessun post ancora. Clicca "Nuovo post" per iniziare.</div>'; return; }
+  const sorted=[...posts].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  el.innerHTML=sorted.map(p=>`
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-title">${esc(p.title)}</div>
+        <div class="item-meta"><span class="tag ${tagClass[p.category]||'tag-n'}">${esc(p.category)}</span> · ${fmtD(p.date)}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editPost('${p.id}')"><i class="fas fa-pen"></i> Modifica</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+/* ================================================================
+   GALLERY
+   ================================================================ */
+document.getElementById('gf-upload-btn').addEventListener('click', uploadPhotos);
+document.getElementById('gv-add-btn').addEventListener('click', addVideo);
+
+async function uploadPhotos() {
+  const files=document.getElementById('gf-img').files;
+  const cap  =document.getElementById('gf-cap').value.trim();
+  if (!files.length) { toast('Seleziona almeno una foto!','err'); return; }
+  for (const f of files) {
+    try { gallery.push({ id:uid(), type:'photo', src:await readFile(f), caption:cap, date:new Date().toISOString() }); }
+    catch { toast('Errore: '+f.name,'err'); }
+  }
+  LS.set('uro_gallery',gallery); renderGalleryGrids(); renderDashboard(); toast('Foto caricata!');
+  document.getElementById('gf-img').value=''; document.getElementById('gf-cap').value='';
+}
+
+function addVideo() {
+  const url  =document.getElementById('gv-url').value.trim();
+  const title=document.getElementById('gv-title').value.trim();
+  if (!url) { toast('Inserisci un URL video!','err'); return; }
+  if (!embedUrl(url)) { toast('URL non valido. Usa YouTube o Vimeo.','err'); return; }
+  gallery.push({ id:uid(), type:'video', url, title, date:new Date().toISOString() });
+  LS.set('uro_gallery',gallery); renderGalleryGrids(); renderDashboard(); toast('Video aggiunto!');
+  document.getElementById('gv-url').value=''; document.getElementById('gv-title').value='';
+}
+
+function deleteGalleryItem(id) {
+  if (!confirm('Eliminare questo elemento?')) return;
+  gallery=gallery.filter(g=>g.id!==id); LS.set('uro_gallery',gallery);
+  renderGalleryGrids(); renderDashboard(); toast('Elemento eliminato.');
+}
+
+function renderGalleryGrids() {
+  const photos=gallery.filter(g=>g.type==='photo');
+  const videos=gallery.filter(g=>g.type==='video');
+  document.getElementById('photos-count').textContent=photos.length;
+  document.getElementById('videos-count').textContent=videos.length;
+
+  const pg=document.getElementById('gal-photos-grid');
+  const pe=document.getElementById('gal-photos-empty');
+  if (!photos.length) { pg.innerHTML=''; pe.style.display='block'; }
+  else { pe.style.display='none'; pg.innerHTML=photos.map(p=>`
+    <div class="gal-adm-item">
+      <img src="${p.src}" alt="${esc(p.caption||'Foto')}" loading="lazy">
+      <button class="gal-adm-del" onclick="deleteGalleryItem('${p.id}')" aria-label="Elimina foto"><i class="fas fa-times"></i></button>
+    </div>`).join(''); }
+
+  const vl=document.getElementById('gal-videos-list');
+  const ve=document.getElementById('gal-videos-empty');
+  if (!videos.length) { vl.innerHTML=''; ve.style.display='block'; }
+  else { ve.style.display='none'; vl.innerHTML=videos.map(v=>`
+    <div class="gal-adm-vid">
+      <div class="gal-adm-vid-info">
+        <div class="vt">${esc(v.title||'Video senza titolo')}</div>
+        <div class="vu">${esc(v.url)}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deleteGalleryItem('${v.id}')"><i class="fas fa-trash"></i></button>
+    </div>`).join(''); }
+}
+
+/* ================================================================
+   TEAM
+   ================================================================ */
+function renderTeamGrid() {
+  document.getElementById('team-adm-grid').innerHTML=team.map((m,i)=>`
+    <div class="team-adm-card" onclick="openTeamModal(${i})" role="button" tabindex="0"
+         aria-label="Modifica ${esc(m.name)}" onkeydown="if(event.key==='Enter')openTeamModal(${i})">
+      <div class="team-adm-photo">
+        ${m.photo?`<img src="${m.photo}" alt="Foto di ${esc(m.name)}">`:'<i class="fas fa-user-md"></i>'}
+      </div>
+      <div class="team-adm-name">${esc(m.name)}</div>
+      <div class="team-adm-role">${esc(m.role)||'—'}</div>
+    </div>`).join('');
+}
+
+function openTeamModal(i) {
+  document.getElementById('tm-idx').value=i;
+  document.getElementById('team-modal-title').textContent='Modifica: '+team[i].name;
+  document.getElementById('tm-role').value=team[i].role||'';
+  document.getElementById('tm-photo').value='';
+  if (team[i].photo) {
+    document.getElementById('tm-preview-img').src=team[i].photo;
+    document.getElementById('tm-preview').style.display='block';
+  } else { document.getElementById('tm-preview').style.display='none'; }
+  document.getElementById('team-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeTeamModal() {
+  document.getElementById('team-modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+document.getElementById('team-modal-close').addEventListener('click', closeTeamModal);
+document.getElementById('team-modal-cancel').addEventListener('click', closeTeamModal);
+document.getElementById('team-modal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeTeamModal(); });
+
+document.getElementById('tm-photo').addEventListener('change', async function() {
+  const f=this.files[0]; if(!f) return;
+  try {
+    const src=await readFile(f);
+    document.getElementById('tm-preview-img').src=src;
+    document.getElementById('tm-preview').style.display='block';
+  } catch {}
+});
+
+document.getElementById('team-modal-save').addEventListener('click', async () => {
+  const i=parseInt(document.getElementById('tm-idx').value);
+  team[i].role=document.getElementById('tm-role').value.trim();
+  const f=document.getElementById('tm-photo').files[0];
+  if (f) { try { team[i].photo=await readFile(f); } catch { toast('Errore foto.','err'); return; } }
+  LS.set('uro_team',team); renderTeamGrid(); closeTeamModal(); toast('Team aggiornato!');
+});
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeTeamModal(); });
+
+/* ================================================================
+   IMPOSTAZIONI
+   ================================================================ */
+function loadSettingsForm() {
+  document.getElementById('s-about').value    = settings.about       ||'';
+  document.getElementById('s-addr').value     = settings.address     ||'';
+  document.getElementById('s-phone').value    = settings.phone       ||'';
+  document.getElementById('s-email').value    = settings.email       ||'';
+  document.getElementById('s-hours').value    = settings.hours       ||'';
+  document.getElementById('s-prenoting').value= settings.prenoting   ||'';
+  document.getElementById('s-myped').value    = settings.mypederzoli ||'';
+}
+
+document.getElementById('settings-save-btn').addEventListener('click', () => {
+  settings.about       = document.getElementById('s-about').value;
+  settings.address     = document.getElementById('s-addr').value.trim();
+  settings.phone       = document.getElementById('s-phone').value.trim();
+  settings.email       = document.getElementById('s-email').value.trim();
+  settings.hours       = document.getElementById('s-hours').value.trim();
+  settings.prenoting   = document.getElementById('s-prenoting').value.trim();
+  settings.mypederzoli = document.getElementById('s-myped').value.trim();
+  LS.set('uro_settings',settings); toast('Impostazioni salvate!');
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (!confirm('Reimpostare TUTTI i dati ai valori predefiniti? L\'operazione è irreversibile.')) return;
+  localStorage.removeItem('uro_posts');
+  localStorage.removeItem('uro_gallery');
+  localStorage.removeItem('uro_team');
+  localStorage.removeItem('uro_settings');
+  loadState(); renderAll(); toast('Dati reimpostati.');
+});
+
+/* ================================================================
+   INIT
+   ================================================================ */
+// Se già loggato in questa sessione (reload), mostra direttamente il pannello
+// (per sicurezza non persistiamo il login oltre la sessione del browser)
+document.getElementById('login-screen').style.display='flex';
+document.getElementById('app').classList.remove('visible');
+</script>
+</body>
+</html>

@@ -113,13 +113,10 @@ function initPage(pageName) {
   injectScrollBar();
   injectHeader(pageName);
   injectFooter();
-  injectToast();
-  injectAdmin();
   setupScrollProgress();
   setupHamburger();
   document.getElementById('footer-yr').textContent = new Date().getFullYear();
   applySettings();
-  setupAdmin();
 }
 
 /* ================================================================
@@ -201,7 +198,6 @@ function injectFooter() {
     <p><strong>Urologia — Ospedale Pederzoli</strong></p>
     <p style="margin-top:.4rem">Via Monte Baldo, 24 — 37019 Peschiera del Garda (VR) &nbsp;|&nbsp; P.IVA 00244840237</p>
     <p style="margin-top:.25rem">© <span id="footer-yr"></span> Ospedale Pederzoli. Tutti i diritti riservati.</p>
-    <button class="admin-dot" id="admin-dot-btn" aria-label="Accesso amministratori" title="Accesso amministratori">●</button>
   </footer>`;
   document.body.insertAdjacentHTML('beforeend', html);
 }
@@ -370,7 +366,7 @@ function closeLb() {
 }
 
 /* ================================================================
-   ADMIN — iniezione HTML
+   ADMIN — le funzioni admin sono in admin.html
    ================================================================ */
 function injectAdmin() {
   const html = `
