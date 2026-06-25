@@ -104,6 +104,11 @@ function ytId(url) {
 }
 
 function loadVideo(el, src) {
+  const ytMatch = src.match(/youtube\.com\/embed\/([^?&]+)/);
+  if (ytMatch) {
+    window.open('https://www.youtube.com/watch?v=' + ytMatch[1], '_blank', 'noopener,noreferrer');
+    return;
+  }
   const iframe = document.createElement('iframe');
   iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
   iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
