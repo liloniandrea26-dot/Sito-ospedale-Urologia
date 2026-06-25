@@ -244,6 +244,10 @@
 
     /* Divider */
     .sep { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    /* Separatore "oppure" tra file e URL */
+    .or-sep { display:flex;align-items:center;gap:.75rem;margin:.1rem 0 .9rem }
+    .or-sep hr { flex:1;border:none;border-top:1px solid var(--border) }
+    .or-sep span { font-size:.72rem;font-weight:600;color:var(--muted);white-space:nowrap;text-transform:uppercase;letter-spacing:.06em }
 
     /* Empty state */
     .empty { text-align: center; color: var(--muted); padding: 3rem 1rem; }
@@ -396,7 +400,12 @@
             <div class="fgrp"><label class="fl" for="pf-text">Testo</label><textarea class="fta" id="pf-text" placeholder="Testo del post..."></textarea></div>
             <div class="fg2">
               <div class="fgrp"><label class="fl" for="pf-video">URL Video (YouTube / Vimeo)</label><input type="url" class="fi" id="pf-video" placeholder="https://www.youtube.com/watch?v=..."></div>
-              <div class="fgrp"><label class="fl" for="pf-img">Immagine</label><input type="file" class="fi" id="pf-img" accept="image/*" style="padding:.35rem"></div>
+              <div class="fgrp">
+                <label class="fl" for="pf-img">Immagine — carica file</label>
+                <input type="file" class="fi" id="pf-img" accept="image/*" style="padding:.35rem">
+                <div class="or-sep"><hr><span>oppure tramite URL</span><hr></div>
+                <input type="url" class="fi" id="pf-img-url" placeholder="https://esempio.com/immagine.jpg">
+              </div>
             </div>
             <div id="pf-img-preview" style="margin-bottom:.9rem;display:none"><img id="pf-img-preview-src" style="max-height:120px;border-radius:6px;object-fit:cover" alt="Anteprima"></div>
             <div style="display:flex;gap:.5rem">
@@ -422,7 +431,12 @@
           <div class="card">
             <div class="card-body">
               <div class="card-title">Carica foto</div>
-              <div class="fgrp"><label class="fl" for="gf-img">Seleziona immagini</label><input type="file" class="fi" id="gf-img" accept="image/*" multiple style="padding:.35rem"></div>
+              <div class="fgrp">
+                <label class="fl" for="gf-img">Carica file</label>
+                <input type="file" class="fi" id="gf-img" accept="image/*" multiple style="padding:.35rem">
+                <div class="or-sep"><hr><span>oppure tramite URL</span><hr></div>
+                <input type="url" class="fi" id="gf-img-url" placeholder="https://esempio.com/immagine.jpg">
+              </div>
               <div class="fgrp"><label class="fl" for="gf-cap">Didascalia</label><input type="text" class="fi" id="gf-cap" placeholder="Descrizione..."></div>
               <button class="btn btn-primary" id="gf-upload-btn"><i class="fas fa-upload"></i> Carica</button>
             </div>
@@ -515,7 +529,12 @@
     <div class="modal-body">
       <input type="hidden" id="tm-idx">
       <div class="fgrp"><label class="fl" for="tm-role">Ruolo</label><input type="text" class="fi" id="tm-role" placeholder="es. Urologo, Dirigente Medico"></div>
-      <div class="fgrp"><label class="fl" for="tm-photo">Foto</label><input type="file" class="fi" id="tm-photo" accept="image/*" style="padding:.35rem"></div>
+      <div class="fgrp">
+        <label class="fl" for="tm-photo">Foto — carica file</label>
+        <input type="file" class="fi" id="tm-photo" accept="image/*" style="padding:.35rem">
+        <div class="or-sep"><hr><span>oppure tramite URL</span><hr></div>
+        <input type="url" class="fi" id="tm-photo-url" placeholder="https://esempio.com/foto.jpg">
+      </div>
       <div id="tm-preview" style="display:none;margin-bottom:.5rem"><img id="tm-preview-img" style="width:80px;height:80px;border-radius:50%;object-fit:cover" alt="Anteprima foto"></div>
     </div>
     <div class="modal-foot">
@@ -727,7 +746,16 @@ document.getElementById('pf-img').addEventListener('change', async function() {
     const src=await readFile(f);
     document.getElementById('pf-img-preview-src').src=src;
     document.getElementById('pf-img-preview').style.display='block';
+    document.getElementById('pf-img-url').value=''; // file ha priorità, svuota URL
   } catch {}
+});
+document.getElementById('pf-img-url').addEventListener('input', function() {
+  const url=this.value.trim();
+  if (url) {
+    document.getElementById('pf-img-preview-src').src=url;
+    document.getElementById('pf-img-preview').style.display='block';
+    document.getElementById('pf-img').value=''; // URL ha priorità, svuota file
+  } else { document.getElementById('pf-img-preview').style.display='none'; }
 });
 
 function openNewPostForm() {
@@ -737,6 +765,7 @@ function openNewPostForm() {
   document.getElementById('pf-text').value='';
   document.getElementById('pf-video').value='';
   document.getElementById('pf-img').value='';
+  document.getElementById('pf-img-url').value='';
   document.getElementById('pf-img-preview').style.display='none';
   document.getElementById('post-form-title').textContent='Nuovo post';
   document.getElementById('post-form-card').style.display='block';
@@ -754,18 +783,24 @@ async function savePost() {
   const cat   = document.getElementById('pf-cat').value;
   const text  = document.getElementById('pf-text').value.trim();
   const video = document.getElementById('pf-video').value.trim();
-  const file  = document.getElementById('pf-img').files[0];
+  const file    = document.getElementById('pf-img').files[0];
+  const imgUrl  = document.getElementById('pf-img-url').value.trim();
+
+  async function resolveImage(existing='') {
+    if (file)   { try { return await readFile(file); } catch { toast('Errore immagine','err'); return null; } }
+    if (imgUrl) return imgUrl;
+    return existing;
+  }
 
   if (id) {
-    // edit existing
     const p=posts.find(x=>x.id===id);
     if (!p) return;
     p.title=title; p.category=cat; p.text=text; p.videoUrl=video;
-    if (file) { try { p.image=await readFile(file); } catch { toast('Errore immagine','err'); return; } }
+    const img=await resolveImage(p.image); if(img===null) return;
+    p.image=img;
   } else {
-    let image='';
-    if (file) { try { image=await readFile(file); } catch { toast('Errore immagine','err'); return; } }
-    posts.unshift({ id:uid(), title, category:cat, text, videoUrl:video, image, date:new Date().toISOString() });
+    const img=await resolveImage(); if(img===null) return;
+    posts.unshift({ id:uid(), title, category:cat, text, videoUrl:video, image:img||'', date:new Date().toISOString() });
   }
 
   LS.set('uro_posts',posts);
@@ -781,6 +816,8 @@ function editPost(postId) {
   document.getElementById('pf-text').value=p.text||'';
   document.getElementById('pf-video').value=p.videoUrl||'';
   document.getElementById('pf-img').value='';
+  document.getElementById('pf-img').value='';
+  document.getElementById('pf-img-url').value='';
   if (p.image) {
     document.getElementById('pf-img-preview-src').src=p.image;
     document.getElementById('pf-img-preview').style.display='block';
@@ -821,15 +858,23 @@ document.getElementById('gf-upload-btn').addEventListener('click', uploadPhotos)
 document.getElementById('gv-add-btn').addEventListener('click', addVideo);
 
 async function uploadPhotos() {
-  const files=document.getElementById('gf-img').files;
-  const cap  =document.getElementById('gf-cap').value.trim();
-  if (!files.length) { toast('Seleziona almeno una foto!','err'); return; }
+  const files  = document.getElementById('gf-img').files;
+  const imgUrl = document.getElementById('gf-img-url').value.trim();
+  const cap    = document.getElementById('gf-cap').value.trim();
+
+  if (!files.length && !imgUrl) { toast('Seleziona un file oppure inserisci un URL!','err'); return; }
+
+  if (imgUrl) {
+    gallery.push({ id:uid(), type:'photo', src:imgUrl, caption:cap, date:new Date().toISOString() });
+  }
   for (const f of files) {
     try { gallery.push({ id:uid(), type:'photo', src:await readFile(f), caption:cap, date:new Date().toISOString() }); }
     catch { toast('Errore: '+f.name,'err'); }
   }
-  LS.set('uro_gallery',gallery); renderGalleryGrids(); renderDashboard(); toast('Foto caricata!');
-  document.getElementById('gf-img').value=''; document.getElementById('gf-cap').value='';
+  LS.set('uro_gallery',gallery); renderGalleryGrids(); renderDashboard(); toast('Foto aggiunta!');
+  document.getElementById('gf-img').value='';
+  document.getElementById('gf-img-url').value='';
+  document.getElementById('gf-cap').value='';
 }
 
 function addVideo() {
@@ -896,6 +941,7 @@ function openTeamModal(i) {
   document.getElementById('team-modal-title').textContent='Modifica: '+team[i].name;
   document.getElementById('tm-role').value=team[i].role||'';
   document.getElementById('tm-photo').value='';
+  document.getElementById('tm-photo-url').value='';
   if (team[i].photo) {
     document.getElementById('tm-preview-img').src=team[i].photo;
     document.getElementById('tm-preview').style.display='block';
@@ -919,14 +965,25 @@ document.getElementById('tm-photo').addEventListener('change', async function() 
     const src=await readFile(f);
     document.getElementById('tm-preview-img').src=src;
     document.getElementById('tm-preview').style.display='block';
+    document.getElementById('tm-photo-url').value='';
   } catch {}
+});
+document.getElementById('tm-photo-url').addEventListener('input', function() {
+  const url=this.value.trim();
+  if (url) {
+    document.getElementById('tm-preview-img').src=url;
+    document.getElementById('tm-preview').style.display='block';
+    document.getElementById('tm-photo').value='';
+  }
 });
 
 document.getElementById('team-modal-save').addEventListener('click', async () => {
-  const i=parseInt(document.getElementById('tm-idx').value);
-  team[i].role=document.getElementById('tm-role').value.trim();
-  const f=document.getElementById('tm-photo').files[0];
-  if (f) { try { team[i].photo=await readFile(f); } catch { toast('Errore foto.','err'); return; } }
+  const i      = parseInt(document.getElementById('tm-idx').value);
+  team[i].role = document.getElementById('tm-role').value.trim();
+  const f      = document.getElementById('tm-photo').files[0];
+  const url    = document.getElementById('tm-photo-url').value.trim();
+  if (f)   { try { team[i].photo=await readFile(f); } catch { toast('Errore foto.','err'); return; } }
+  else if (url) { team[i].photo=url; }
   LS.set('uro_team',team); renderTeamGrid(); closeTeamModal(); toast('Team aggiornato!');
 });
 
