@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>Gestione — Urologia Ospedale Pederzoli</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -652,6 +653,7 @@ function doLogin() {
   const e=document.getElementById('login-err');
   if (u===ADMIN_USERNAME && p===ADMIN_PASSWORD) {
     isLoggedIn=true; e.classList.remove('show');
+    sessionStorage.setItem('uro_authed','1');
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').classList.add('visible');
     loadState(); renderAll();
@@ -662,6 +664,7 @@ function doLogin() {
 
 document.getElementById('logout-btn').addEventListener('click', () => {
   isLoggedIn=false;
+  sessionStorage.removeItem('uro_authed');
   document.getElementById('app').classList.remove('visible');
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('l-pass').value='';
@@ -742,11 +745,12 @@ document.getElementById('post-save-btn').addEventListener('click', savePost);
 
 document.getElementById('pf-img').addEventListener('change', async function() {
   const f=this.files[0]; if (!f) return;
+  if (f.size > 1.5*1024*1024) { toast('Immagine troppo grande (max 1.5 MB).','err'); this.value=''; return; }
   try {
     const src=await readFile(f);
     document.getElementById('pf-img-preview-src').src=src;
     document.getElementById('pf-img-preview').style.display='block';
-    document.getElementById('pf-img-url').value=''; // file ha priorità, svuota URL
+    document.getElementById('pf-img-url').value='';
   } catch {}
 });
 document.getElementById('pf-img-url').addEventListener('input', function() {
@@ -868,6 +872,7 @@ async function uploadPhotos() {
     gallery.push({ id:uid(), type:'photo', src:imgUrl, caption:cap, date:new Date().toISOString() });
   }
   for (const f of files) {
+    if (f.size > 1.5 * 1024 * 1024) { toast(`"${f.name}" supera 1.5 MB. Comprimi l'immagine prima di caricarla.`, 'err'); continue; }
     try { gallery.push({ id:uid(), type:'photo', src:await readFile(f), caption:cap, date:new Date().toISOString() }); }
     catch { toast('Errore: '+f.name,'err'); }
   }
@@ -961,6 +966,7 @@ document.getElementById('team-modal').addEventListener('click', e=>{ if(e.target
 
 document.getElementById('tm-photo').addEventListener('change', async function() {
   const f=this.files[0]; if(!f) return;
+  if (f.size > 1.5*1024*1024) { toast('Foto troppo grande (max 1.5 MB).','err'); this.value=''; return; }
   try {
     const src=await readFile(f);
     document.getElementById('tm-preview-img').src=src;
@@ -1025,10 +1031,15 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 /* ================================================================
    INIT
    ================================================================ */
-// Se già loggato in questa sessione (reload), mostra direttamente il pannello
-// (per sicurezza non persistiamo il login oltre la sessione del browser)
-document.getElementById('login-screen').style.display='flex';
-document.getElementById('app').classList.remove('visible');
+if (sessionStorage.getItem('uro_authed') === '1') {
+  isLoggedIn = true;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  loadState(); renderAll();
+} else {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').classList.remove('visible');
+}
 </script>
 </body>
 </html>
