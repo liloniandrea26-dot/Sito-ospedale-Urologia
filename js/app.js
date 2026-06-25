@@ -53,8 +53,8 @@ const DEFAULT_SETTINGS = {
   phone:       '+39 045 6449111',
   email:       'urologia@pederzoli.it',
   hours:       'Lunedì – Venerdì: 8:00 – 16:00',
-  prenoting:   'https://www.prenoting.it',
-  mypederzoli: 'https://my.pederzoli.it'
+  prenoting:   'https://portalepaziente.ospedalepederzoli.it/home.php?virtualSites[]=0',
+  mypederzoli: 'https://www.ospedalepederzoli.it/mypederzoli/'
 };
 
 /* ================================================================
@@ -75,6 +75,11 @@ function loadState() {
   gallery  = LS.get('uro_gallery',  []);
   team     = LS.get('uro_team',     null); if (!team)     { team     = JSON.parse(JSON.stringify(DEFAULT_TEAM));     LS.set('uro_team',     team);     }
   settings = LS.get('uro_settings', null); if (!settings) { settings = Object.assign({}, DEFAULT_SETTINGS); LS.set('uro_settings', settings); }
+  // migrate stale placeholder URLs to real ones
+  let dirty = false;
+  if (!settings.prenoting   || settings.prenoting   === 'https://www.prenoting.it')   { settings.prenoting   = DEFAULT_SETTINGS.prenoting;   dirty = true; }
+  if (!settings.mypederzoli || settings.mypederzoli === 'https://my.pederzoli.it')    { settings.mypederzoli = DEFAULT_SETTINGS.mypederzoli; dirty = true; }
+  if (dirty) LS.set('uro_settings', settings);
 }
 
 /* ================================================================
@@ -243,8 +248,8 @@ function injectFooter() {
       <div>
         <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.75rem">Prenotazioni</div>
         <div style="display:flex;flex-direction:column;gap:.5rem">
-          <a href="https://www.prenoting.it" target="_blank" rel="noopener noreferrer" style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'"><i class="fas fa-calendar-check" style="margin-right:.4rem;color:var(--accent)"></i>Prenoting™</a>
-          <a href="https://my.pederzoli.it"  target="_blank" rel="noopener noreferrer" style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'"><i class="fas fa-file-medical"    style="margin-right:.4rem;color:var(--accent)"></i>My Pederzoli</a>
+          <a href="https://portalepaziente.ospedalepederzoli.it/home.php?virtualSites[]=0" target="_blank" rel="noopener noreferrer" style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'"><i class="fas fa-calendar-check" style="margin-right:.4rem;color:var(--accent)"></i>Prenoting™</a>
+          <a href="https://www.ospedalepederzoli.it/mypederzoli/" target="_blank" rel="noopener noreferrer" style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'"><i class="fas fa-file-medical"    style="margin-right:.4rem;color:var(--accent)"></i>My Pederzoli</a>
         </div>
         <div style="margin-top:1.5rem">
           <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.75rem">Area riservata</div>
