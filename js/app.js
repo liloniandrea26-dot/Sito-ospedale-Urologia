@@ -195,9 +195,45 @@ function setupHamburger() {
 function injectFooter() {
   const html = `
   <footer>
-    <p><strong>Urologia — Ospedale Pederzoli</strong></p>
-    <p style="margin-top:.4rem">Via Monte Baldo, 24 — 37019 Peschiera del Garda (VR) &nbsp;|&nbsp; P.IVA 00244840237</p>
-    <p style="margin-top:.25rem">© <span id="footer-yr"></span> Ospedale Pederzoli. Tutti i diritti riservati.</p>
+    <div style="max-width:var(--max-w);margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;text-align:left;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.12)">
+      <div>
+        <div style="font-family:var(--font-title);font-size:1.1rem;color:white;margin-bottom:.5rem">Urologia</div>
+        <div style="font-size:.78rem;color:rgba(255,255,255,.5);letter-spacing:.06em;text-transform:uppercase">Ospedale Pederzoli</div>
+        <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.4rem">
+          <span style="font-size:.85rem;color:rgba(255,255,255,.7)"><i class="fas fa-map-marker-alt" style="width:16px;color:var(--accent)"></i> Via Monte Baldo, 24 — 37019 Peschiera del Garda (VR)</span>
+          <span style="font-size:.85rem;color:rgba(255,255,255,.7)"><i class="fas fa-phone"           style="width:16px;color:var(--accent)"></i> +39 045 6449111</span>
+          <span style="font-size:.85rem;color:rgba(255,255,255,.7)"><i class="fas fa-envelope"        style="width:16px;color:var(--accent)"></i> urologia@pederzoli.it</span>
+          <span style="font-size:.85rem;color:rgba(255,255,255,.7)"><i class="fas fa-door-open"       style="width:16px;color:var(--accent)"></i> Ingresso 2, piano terra, Area D01</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.75rem">Pagine</div>
+        <nav style="display:flex;flex-direction:column;gap:.4rem" aria-label="Link footer">
+          <a href="index.html"    style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'">Home</a>
+          <a href="servizi.html"  style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'">Servizi</a>
+          <a href="team.html"     style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'">Team medico</a>
+          <a href="news.html"     style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'">News &amp; Aggiornamenti</a>
+          <a href="galleria.html" style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'">Galleria</a>
+          <a href="contatti.html" style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'">Contatti</a>
+        </nav>
+      </div>
+      <div>
+        <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.75rem">Prenotazioni</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <a href="https://www.prenoting.it" target="_blank" rel="noopener noreferrer" style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'"><i class="fas fa-calendar-check" style="margin-right:.4rem;color:var(--accent)"></i>Prenoting™</a>
+          <a href="https://my.pederzoli.it"  target="_blank" rel="noopener noreferrer" style="font-size:.875rem;color:rgba(255,255,255,.7);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.7)'"><i class="fas fa-file-medical"    style="margin-right:.4rem;color:var(--accent)"></i>My Pederzoli</a>
+        </div>
+        <div style="margin-top:1.5rem">
+          <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.75rem">Area riservata</div>
+          <a href="admin.html" style="display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;color:rgba(255,255,255,.55);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:.35rem .85rem;border-radius:20px;transition:all .2s" onmouseover="this.style.color='white';this.style.borderColor='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.55)';this.style.borderColor='rgba(255,255,255,.2)'">
+            <i class="fas fa-lock"></i> Pannello admin
+          </a>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:var(--max-w);margin:0 auto;padding-top:1.25rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem">
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4)">© <span id="footer-yr"></span> Ospedale Pederzoli S.p.A. — P.IVA 00244840237. Tutti i diritti riservati.</p>
+    </div>
   </footer>`;
   document.body.insertAdjacentHTML('beforeend', html);
 }
