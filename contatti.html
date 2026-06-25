@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contatti — Urologia Ospedale Pederzoli</title>
+  <meta name="description" content="Contatti, orari e prenotazioni del reparto di Urologia dell'Ospedale Pederzoli di Peschiera del Garda.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="contatti">
+
+  <!-- INTESTAZIONE PAGINA -->
+  <div class="page-hero">
+    <div class="container">
+      <p class="sec-label">Dove siamo</p>
+      <h1 class="sec-title">Contatti &amp; Prenotazioni</h1>
+      <p class="sec-sub">Trova tutte le informazioni per contattarci, raggiungerci e prenotare una visita.</p>
+    </div>
+  </div>
+
+  <!-- CONTATTI -->
+  <section>
+    <div class="container">
+      <div class="contacts-grid">
+        <div>
+          <div class="ci">
+            <div class="ci-icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></div>
+            <div><div class="ci-lbl">Indirizzo</div><div class="ci-val" id="c-address">Via Monte Baldo, 24 — 37019 Peschiera del Garda (VR)</div></div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon"><i class="fas fa-door-open" aria-hidden="true"></i></div>
+            <div><div class="ci-lbl">Reparto</div><div class="ci-val">Ingresso 2, piano terra, Area D01</div></div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon"><i class="fas fa-phone" aria-hidden="true"></i></div>
+            <div><div class="ci-lbl">Telefono</div><div class="ci-val" id="c-phone">+39 045 6449111</div></div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
+            <div><div class="ci-lbl">Email</div><div class="ci-val" id="c-email">urologia@pederzoli.it</div></div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon"><i class="fas fa-clock" aria-hidden="true"></i></div>
+            <div><div class="ci-lbl">Orari ambulatorio</div><div class="ci-val" id="c-hours">Lunedì – Venerdì: 8:00 – 16:00</div></div>
+          </div>
+          <div class="cta-links">
+            <a id="prenoting-link" href="https://www.prenoting.it" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              <i class="fas fa-calendar-check" aria-hidden="true"></i> Prenota una visita (Prenoting™)
+            </a>
+            <a id="mypederzoli-link" href="https://my.pederzoli.it" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+              <i class="fas fa-file-medical" aria-hidden="true"></i> My Pederzoli – Ritiro referti online
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="map-wrap">
+            <iframe
+              src="https://maps.google.com/maps?q=Ospedale+Pederzoli,+Via+Monte+Baldo+24,+Peschiera+del+Garda&output=embed"
+              title="Mappa Ospedale Pederzoli"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COME RAGGIUNGERCI -->
+  <section class="bg-light">
+    <div class="container">
+      <p class="sec-label">Informazioni utili</p>
+      <h2 class="sec-title">Come raggiungerci</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:1.5rem">
+        <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem">
+          <i class="fas fa-car" style="font-size:1.5rem;color:var(--accent);margin-bottom:.75rem;display:block"></i>
+          <h3 style="font-family:var(--font-title);color:var(--blue-deep);margin-bottom:.5rem;font-size:1rem">In auto</h3>
+          <p style="font-size:.875rem;color:var(--text-light);line-height:1.6">Uscita A4 Peschiera del Garda. Seguire le indicazioni per l'Ospedale Pederzoli. Parcheggi disponibili.</p>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem">
+          <i class="fas fa-train" style="font-size:1.5rem;color:var(--accent);margin-bottom:.75rem;display:block"></i>
+          <h3 style="font-family:var(--font-title);color:var(--blue-deep);margin-bottom:.5rem;font-size:1rem">In treno</h3>
+          <p style="font-size:.875rem;color:var(--text-light);line-height:1.6">Stazione di Peschiera del Garda (linea Verona–Milano). Da lì taxi o bus locale fino all'ospedale.</p>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem">
+          <i class="fas fa-bus" style="font-size:1.5rem;color:var(--accent);margin-bottom:.75rem;display:block"></i>
+          <h3 style="font-family:var(--font-title);color:var(--blue-deep);margin-bottom:.5rem;font-size:1rem">In autobus</h3>
+          <p style="font-size:.875rem;color:var(--text-light);line-height:1.6">Linee ATV dalla stazione di Verona Porta Nuova con fermate nelle vicinanze dell'ospedale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/app.js"></script>
+  <script>
+    initPage('contatti');
+  </script>
+</body>
+</html>

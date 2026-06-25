@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servizi — Urologia Ospedale Pederzoli</title>
+  <meta name="description" content="Servizi del reparto di Urologia: ambulatorio, uro-radiologia, chirurgia avanzata e tecnologie robotiche Da Vinci.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="servizi">
+
+  <!-- INTESTAZIONE PAGINA -->
+  <div class="page-hero">
+    <div class="container">
+      <p class="sec-label">Cosa offriamo</p>
+      <h1 class="sec-title">I nostri servizi</h1>
+      <p class="sec-sub">Un'offerta completa di prestazioni urologiche ambulatoriali e chirurgiche, con tecnologie di ultima generazione.</p>
+    </div>
+  </div>
+
+  <!-- SERVIZI -->
+  <section>
+    <div class="container">
+      <div class="svc-grid" id="svc-grid"></div>
+    </div>
+  </section>
+
+  <!-- SEZIONE ROBOTICA APPROFONDIMENTO -->
+  <section class="bg-light">
+    <div class="container">
+      <p class="sec-label">Tecnologia</p>
+      <h2 class="sec-title">Chirurgia robotica Da Vinci</h2>
+      <p class="sec-sub" style="max-width:720px">
+        Il nostro reparto è uno dei pochi centri in Italia ad adottare sia il sistema Da Vinci Xi Multiport che il Da Vinci SP Single Port.
+        Queste piattaforme garantiscono precisione millimetrica, visione 3D ad alta definizione e una riduzione significativa dei tempi di recupero post-operatorio.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:2rem">
+        <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem">
+          <div style="font-size:2rem;margin-bottom:.75rem">🤖</div>
+          <h3 style="font-family:var(--font-title);color:var(--blue-deep);margin-bottom:.5rem">Da Vinci Xi Multiport</h3>
+          <p style="font-size:.9rem;color:var(--text-light);line-height:1.7">Sistema robotico di ultima generazione con quattro braccia articolate indipendenti. Ideale per interventi complessi come prostatectomia radicale, cistectomia e nefroureterectomia.</p>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem">
+          <div style="font-size:2rem;margin-bottom:.75rem">🔬</div>
+          <h3 style="font-family:var(--font-title);color:var(--blue-deep);margin-bottom:.5rem">Da Vinci SP Single Port</h3>
+          <p style="font-size:.9rem;color:var(--text-light);line-height:1.7">Innovativa piattaforma a singolo accesso (un'unica incisione). Riduce al minimo il trauma chirurgico e garantisce risultati estetici ottimali, con degenza più breve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/app.js"></script>
+  <script>
+    initPage('servizi');
+    renderServices();
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galleria — Urologia Ospedale Pederzoli</title>
+  <meta name="description" content="Galleria foto e video del reparto di Urologia dell'Ospedale Pederzoli.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="galleria">
+
+  <!-- INTESTAZIONE PAGINA -->
+  <div class="page-hero">
+    <div class="container">
+      <p class="sec-label">Immagini e video</p>
+      <h1 class="sec-title">Galleria</h1>
+      <p class="sec-sub">Foto e video dal reparto, dalle sale operatorie e dagli eventi del nostro team.</p>
+    </div>
+  </div>
+
+  <!-- GALLERIA -->
+  <section>
+    <div class="container">
+      <div class="gal-grid" id="gal-grid"></div>
+      <div id="gal-empty" class="gal-empty" style="display:none">
+        <i class="fas fa-images" style="font-size:2.5rem;opacity:.3;display:block;margin-bottom:.75rem"></i>
+        <p>La galleria verrà aggiornata a breve.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualizzatore immagine">
+    <button id="lb-close" aria-label="Chiudi"><i class="fas fa-times"></i></button>
+    <img id="lb-img" src="" alt="">
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    initPage('galleria');
+    renderGallery();
+    setupLightbox();
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Medico — Urologia Ospedale Pederzoli</title>
+  <meta name="description" content="Il team di urologi dell'Ospedale Pederzoli: specialisti esperti in chirurgia robotica, oncologia urologica e chirurgia mininvasiva.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="team">
+
+  <!-- INTESTAZIONE PAGINA -->
+  <div class="page-hero">
+    <div class="container">
+      <p class="sec-label">I professionisti</p>
+      <h1 class="sec-title">Il nostro team medico</h1>
+      <p class="sec-sub">Specialisti esperti e appassionati, uniti dall'obiettivo di offrire le migliori cure ai pazienti.</p>
+    </div>
+  </div>
+
+  <!-- TEAM GRID -->
+  <section>
+    <div class="container">
+      <div class="team-grid" id="team-grid"></div>
+    </div>
+  </section>
+
+  <!-- DIREZIONE -->
+  <section class="bg-light">
+    <div class="container">
+      <p class="sec-label">Direzione</p>
+      <h2 class="sec-title">Responsabili del reparto</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;margin-top:1.5rem">
+        <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;display:flex;align-items:flex-start;gap:1rem;flex:1;min-width:260px">
+          <div style="width:48px;height:48px;background:var(--blue-light);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--blue-deep);font-size:1.2rem;flex-shrink:0">
+            <i class="fas fa-user-md" aria-hidden="true"></i>
+          </div>
+          <div>
+            <div style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.25rem">Direttore U.O.</div>
+            <div style="font-family:var(--font-title);font-size:1.1rem;color:var(--blue-deep);font-weight:700">Dott. Gaetano Grosso</div>
+            <div style="font-size:.875rem;color:var(--text-light);margin-top:.25rem">Direttore Unità Operativa di Urologia</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;display:flex;align-items:flex-start;gap:1rem;flex:1;min-width:260px">
+          <div style="width:48px;height:48px;background:var(--blue-light);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--blue-deep);font-size:1.2rem;flex-shrink:0">
+            <i class="fas fa-user-nurse" aria-hidden="true"></i>
+          </div>
+          <div>
+            <div style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.25rem">Coordinatore Sanitario</div>
+            <div style="font-family:var(--font-title);font-size:1.1rem;color:var(--blue-deep);font-weight:700">Beatrice Olivieri</div>
+            <div style="font-size:.875rem;color:var(--text-light);margin-top:.25rem">Coordinatore Infermieristico</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/app.js"></script>
+  <script>
+    initPage('team');
+    renderTeam();
+  </script>
+</body>
+</html>
